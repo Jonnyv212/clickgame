@@ -1,5 +1,30 @@
 .App {
+  border: solid;
+  min-height: 100vh;
+}
+
+.UIHeader {
+}
+
+.ClickUI {
   text-align: center;
+
+  width: 36%;
+  margin: auto;
+  background: black;
+  color: white;
+}
+
+.Image {
+  text-align: center;
+  /* border: groove; */
+  margin: auto;
+  width: 475px;
+  height: 400px;
+}
+
+.PlayerInfo {
+  padding: 6px;
 }
 
 .App-logo {
