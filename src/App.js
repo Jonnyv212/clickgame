@@ -10,6 +10,7 @@ class App extends Component {
     enemyData : enemies,
     enemyDefeated: false,
     enemyHealth: 0,
+    enemyImage: []
   };
 
     displayPlayerinfo = () => {
@@ -25,13 +26,19 @@ class App extends Component {
     }
 
   enemyInfo = () => {
+    //Generate a random number
     let enemyArr = Math.floor(Math.random() * 4);
-
+    //Map data from state and assign it to variable.
     let eInfo = this.state.enemyData.map((enemy, index) =>{
       return(enemy)
     })
-     return eInfo[enemyArr]; 
+    //Filter data based on monsterID's value which is enemyArr
+    let randEnemy = eInfo.filter(mob => {
+      console.log(enemyArr)
+      return mob.monsterID == enemyArr
+    });
     
+    return randEnemy;
     // this.setState(
     //   {
     //     // enemyHealth: monsters[enemyArr].monsterHealth,
@@ -51,13 +58,15 @@ class App extends Component {
 
   spawnMonster = () => {
     let getEnemyInfo = this.enemyInfo();
-    this.setState({ enemyHealth: getEnemyInfo.monsterHealth, enemyDefeated: false});
+    this.setState({ enemyHealth: getEnemyInfo.monsterHealth, 
+      enemyImage: getEnemyInfo.monsterImage,
+      enemyDefeated: false});
     return (
         <img
           className="Image"
-          src={require(getEnemyInfo.monsterImage + ".jpg")}
+          src={require("./Images/Enemies/slime" + ".jpg")}
           alt="slime"
-          onClick={console.log(this.state.enemyHealth)}
+          onClick={console.log("Clicked" + this.state.enemyHealth)}
         />
     );
   };
@@ -90,7 +99,7 @@ class App extends Component {
   MonsterDefeated = () => {
     console.log("currently: " + this.state.enemyHealth)
     if (this.state.enemyHealth < 1) {
-       this.spawnMonster();
+      //  this.spawnMonster();
       // this.setState(
       //   {
       //     killcount: this.state.killcount + 1,
@@ -111,9 +120,11 @@ class App extends Component {
     return (
       <div className="App">
         <div className="ClickUI">
-        {this.MonsterDefeated()}
+        {/* {this.MonsterDefeated()} */}
           {/* {console.log(this.enemyInfo().monsterName)} */}
           <div>{this.displayPlayerinfo()}</div>
+          {console.log(this.enemyInfo())}
+          
           {/* <div className="UIHeader">CLICK THE MONSTER TO ATTACK!</div> */}
           {/* {this.spawnMonster()} */}
         </div>
