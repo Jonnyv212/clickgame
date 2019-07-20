@@ -7,71 +7,149 @@ import monsters from "./Enemies.json";
 class App extends Component {
   state = {
     playerData: player,
-    enemyData : enemies,
-    enemyDefeated: false,
+    playerDamage: 1,
+    playerLevel: 1,
+    currentExp: 0,
+    levelExp: 1,
+    playerKills: 0,
+
+    enemyData: enemies,
+    enemyDefeated: true,
     enemyHealth: 0,
-    enemyImage: []
+    enemyExp: 0,
+    enemyLevel: 1,
+    enemyImage: "./Images/Enemies/slime.jpg",
+    enemyName: ""
   };
 
-    displayPlayerinfo = () => {
-    let data =  this.state.playerData.map((player, index) =>{
-        return (
-          <div className="PlayerInfo">
-            Kills: {player.killcount}, Level:{" "}
-            {player.playerLevel}, Exp: {player.playerExp} /{" "} {player.playerLevel},
-            {" "} Level: {player.playerLevel}
-          </div>);
-      })
-      return data;
+  componentDidMount() {
+    this.updatePlayerInfo();
+    this.enemySpawner();
+  }
+  updatePlayerInfo = () => {
+    //Map data from state and assign it to variable.
+    let pInfo = this.state.playerData.map((player, index) => {
+      return player;
+    });
+
+    let pDamage = pInfo.map(player => {
+      return player.playerDamage;
+    });
+    let pLevel = pInfo.map(player => {
+      return player.playerLevel;
+    });
+    let cExp = pInfo.map(player => {
+      return player.playerExp;
+    });
+    let lExp = pInfo.map(player => {
+      return player.levelExp;
+    });
+
+    this.setState({
+      playerDamage: pDamage,
+      playerLevel: pLevel,
+      currentExp: cExp,
+      levelExp: lExp
+    });
+  };
+  displayPlayerinfo = () => {
+    let data = this.state.playerData.map((player, index) => {
+      return (
+        <div className="PlayerInfo">
+          Kills: {this.state.playerKills}, Level: {this.state.playerLevel}, Exp:{" "}
+          {this.state.currentExp} / {this.state.levelExp}
+        </div>
+      );
+    });
+    return data;
+  };
+
+  enemySpawner = () => {
+    //Map data from state and assign it to variable.
+    let eInfo = this.state.enemyData.map((enemy, index) => {
+      return enemy;
+    });
+
+    //Generate a random number
+    let enemyArr = Math.floor(Math.random() * eInfo.length + 1);
+    if (enemyArr == 0) {
+      enemyArr += 1;
     }
 
-  enemyInfo = () => {
-    //Generate a random number
-    let enemyArr = Math.floor(Math.random() * 4);
-    //Map data from state and assign it to variable.
-    let eInfo = this.state.enemyData.map((enemy, index) =>{
-      return(enemy)
-    })
     //Filter data based on monsterID's value which is enemyArr
     let randEnemy = eInfo.filter(mob => {
-      console.log(enemyArr)
-      return mob.monsterID == enemyArr
+      // console.log(enemyArr);
+      return mob.monsterID == enemyArr;
     });
-    
-    return randEnemy;
-    // this.setState(
-    //   {
-    //     // enemyHealth: monsters[enemyArr].monsterHealth,
-    //     // enemyName: monsters[enemyArr].monsterName,
-    //     // enemyLevel: monsters[enemyArr].monsterLevel,
-    //     // enemyExp: monsters[enemyArr].monsterExp,
-    //     // enemyImage: monsters[enemyArr].monsterImage,
 
-    //     enemyDefeated: false
-    //   },
-    //   () => {
-    //     console.log("Spawning a " + this.state.enemyName + " ID: " + enemyArr);
-    //   }
-    // );
-  };
+    let enName = randEnemy.map(enemy => {
+      return enemy.monsterName;
+    });
+    let enLevel = randEnemy.map(enemy => {
+      return enemy.monsterLevel;
+    });
+    let enExp = randEnemy.map(enemy => {
+      return enemy.monsterExp;
+    });
+    let enHealth = randEnemy.map(enemy => {
+      return enemy.monsterHealth;
+    });
+    let enImage = randEnemy.map(enemy => {
+      return enemy.monsterImage;
+    });
 
-
-  spawnMonster = () => {
-    let getEnemyInfo = this.enemyInfo();
-    this.setState({ enemyHealth: getEnemyInfo.monsterHealth, 
-      enemyImage: getEnemyInfo.monsterImage,
-      enemyDefeated: false});
-    return (
-        <img
-          className="Image"
-          src={require("./Images/Enemies/slime" + ".jpg")}
-          alt="slime"
-          onClick={console.log("Clicked" + this.state.enemyHealth)}
-        />
+    this.setState(
+      {
+        enemyHealth: enHealth,
+        enemyLevel: enLevel,
+        enemyExp: enExp,
+        enemyImage: enImage + ".jpg",
+        enemyName: enName,
+        enemyDefeated: false
+      },
+      console.log("Spawning a " + enName)
     );
   };
 
-  GainExp = () => {
+  playerAttack = () => {
+    let pDamage = this.state.playerData.map((player, index) => {
+      return player.playerDamage;
+    });
+    this.setState({
+      enemyHealth: this.state.enemyHealth - pDamage
+    });
+  };
+  displayEnemy = () => {
+    return (
+      <div>
+        <img
+          className="Image"
+          src={require(`${this.state.enemyImage}`)}
+          alt="slime"
+          onClick={this.playerAttack}
+        />
+        <div>Enemy Health: {this.state.enemyHealth}</div>
+        {/* {console.log(
+          this.state.enemyName + " health: " + this.state.enemyHealth
+        )} */}
+      </div>
+    );
+  };
+
+  killCounter = () => {
+    let killNumber = this.state.playerData.map((player, index) => {
+      // console.log("counter: "+ player.killcount);
+      return player.killcount;
+    });
+
+    this.setState({
+      // player.killcount: this.state.killcount + 1,
+      playerKills: this.state.playerKills + killNumber[0] + 1,
+      playerExp: this.state.playerExp + this.state.enemyExp
+    });
+  };
+
+  gainExp = () => {
     if (this.state.playerExp >= this.state.levelExp) {
       let expOver = 0;
 
@@ -96,35 +174,24 @@ class App extends Component {
     }
   };
 
-  MonsterDefeated = () => {
-    console.log("currently: " + this.state.enemyHealth)
-    if (this.state.enemyHealth < 1) {
-      //  this.spawnMonster();
-      // this.setState(
-      //   {
-      //     killcount: this.state.killcount + 1,
-      //     playerExp: this.state.playerExp + this.state.enemyExp
-      //   },
-      //   () => {
-      //     console
-      //       .log
-      //       // "Monster defeated! Gained: " + this.state.enemyExp + " experience."
-      //       ();
-      //   }
-      // );
-    }
-  };
-
   render() {
-    // this.GainExp();
+    if (this.state.enemyHealth == 0) {
+      this.setState({
+        enemyDefeated: true
+      });
+      this.killCounter();
+      this.enemySpawner();
+    }
+
     return (
       <div className="App">
         <div className="ClickUI">
-        {/* {this.MonsterDefeated()} */}
+          {/* {this.MonsterDefeated()} */}
+          {this.displayEnemy()}
           {/* {console.log(this.enemyInfo().monsterName)} */}
-          <div>{this.displayPlayerinfo()}</div>
-          {console.log(this.enemyInfo())}
-          
+          {this.displayPlayerinfo()}
+          {/* {this.enemyInfo()} */}
+
           {/* <div className="UIHeader">CLICK THE MONSTER TO ATTACK!</div> */}
           {/* {this.spawnMonster()} */}
         </div>
