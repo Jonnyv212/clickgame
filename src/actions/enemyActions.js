@@ -6,3 +6,12 @@ export const setEnemyData = data => {
     });
   };
 };
+
+export const setCurrentEnemyData = data => {
+  return dispatch => {
+    dispatch({
+      type: "CURRENT_ENEMY_DATA",
+      payload: data
+    });
+  };
+};

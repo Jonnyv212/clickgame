@@ -1,6 +1,6 @@
-import React, { Component, useState } from "react";
-import enemies from "../JSON/Enemies.json";
-import player from "../JSON/Player.json";
+import React, { Component, useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import { DisplayEnemy } from "../components/DisplayEnemy";
 import "./App.css";
 
@@ -8,14 +8,12 @@ import "./App.css";
 
 // class App extends Component {
   const App = () => {
-  const [playerData, setPlayerData] = useState(player)
-  const [enemyData, setEnemyData] = useState(enemies)
+  // const pData = useSelector(state => state.dataStates.playerData);
+  const eData = useSelector(state => state.dataStates.enemyData);
+  const currentEnemy = useSelector(state => state.dataStates.enemyData);
 
-  // state = {
-  //   playerData: player,
-  //   enemyData: enemies,
-  //   enemyDefeated: true,
-  // };
+  const dispatch = useDispatch();
+
 
   // componentDidMount() {
   //   this.updatePlayerInfo();
@@ -65,46 +63,7 @@ import "./App.css";
   //     return enemy;
   //   });
 
-  //   //Generate a random number
-  //   let enemyArr = Math.floor(Math.random() * eInfo.length + 1);
-  //   if (enemyArr == 0) {
-  //     enemyArr += 1;
-  //   }
 
-  //   //Filter data based on monsterID's value which is enemyArr
-  //   let randEnemy = eInfo.filter(mob => {
-  //     // console.log(enemyArr);
-  //     return mob.monsterID == enemyArr;
-  //   });
-
-  //   let enName = randEnemy.map(enemy => {
-  //     return enemy.monsterName;
-  //   });
-  //   let enLevel = randEnemy.map(enemy => {
-  //     return enemy.monsterLevel;
-  //   });
-  //   let enExp = randEnemy.map(enemy => {
-  //     return enemy.monsterExp;
-  //   });
-  //   let enHealth = randEnemy.map(enemy => {
-  //     return enemy.monsterHealth;
-  //   });
-  //   let enImage = randEnemy.map(enemy => {
-  //     return enemy.monsterImage;
-  //   });
-
-  //   this.setState(
-  //     {
-  //       enemyHealth: enHealth,
-  //       enemyLevel: enLevel,
-  //       enemyExp: enExp,
-  //       enemyImage: enImage + ".jpg",
-  //       enemyName: enName,
-  //       enemyDefeated: false
-  //     },
-  //     console.log("Spawning a " + enName)
-  //   );
-  // };
 
   // playerAttack = () => {
   //   let pDamage = this.state.playerData.map((player, index) => {
@@ -114,22 +73,7 @@ import "./App.css";
   //     enemyHealth: this.state.enemyHealth - pDamage
   //   });
   // };
-  // displayEnemy = () => {
-  //   return (
-  //     <div>
-  //       <img
-  //         className="Image"
-  //         src={require(`../Images/Enemies/slime.jpg`)}
-  //         alt="slime"
-  //         onClick={this.playerAttack}
-  //       />
-  //       <div>Enemy Health: {this.state.enemyHealth}</div>
-  //       {/* {console.log(
-  //         this.state.enemyName + " health: " + this.state.enemyHealth
-  //       )} */}
-  //     </div>
-  //   );
-  // };
+
 
   // killCounter = () => {
   //   let killNumber = this.state.playerData.map((player, index) => {
@@ -169,28 +113,45 @@ import "./App.css";
   //   }
   // };
 
-  // render() {
-    // if (this.state.enemyHealth == 0) {
-    //   this.setState({
-    //     enemyDefeated: true
-    //   });
-    //   this.killCounter();
-    //   this.enemySpawner();
-    // }
+    const combatStart = (enemyID) =>{
+      let eHealth = eData[enemyID].monsterHealth;
+      let inCombat = true;
+      if(inCombat == true){
+        var interval =  setInterval(() => {
+            if(eHealth > 0){
+              eHealth -= 3;
+              console.log("Enemy health: " + eHealth)
+            }else{
+              console.log("Enemy defeated!");
+              inCombat = false;
+              clearInterval(interval);
+            }
+          }, 1000);
+    }
+  }
 
-    const pushDataToComponents = data => {
-      let rNum = Math.round(Math.random() * (data.length - 1))
-      // console.log(rNum)
+    const enemySpawner = data => {
+      combatStart(rNum)
+      console.log("Spawning a: " + data[rNum].monsterName)
       return  <DisplayEnemy EnemyData={data[rNum]}/>
     };
 
+    const setNewEnemy = () => {
+      let rNum = Math.round(Math.random() * (data.length - 1))
+      dispatch(setCurrentEnemyData(eData[rNum]))
+      enemySpawner(currentEnemy)
+    }
     return (
       <div className="App">
         <div className="ClickUI">
-          {pushDataToComponents(enemyData)}
+          <button onClick={() => enemySpawner(eData)}>FIGHT</button>
+          {/* {enemySpawner(eData)} */}
         </div>
       </div>
     );
   // }
 }
-export default App;
+export default connect(
+  null,
+  null
+)(App);
