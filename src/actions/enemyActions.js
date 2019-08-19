@@ -15,3 +15,13 @@ export const setCurrentEnemyData = data => {
     });
   };
 };
+
+
+export const setCurrentEnemyHealth = data => {
+  return dispatch => {
+    dispatch({
+      type: "UPDATE_ENEMY_HEALTH",
+      payload: data
+    });
+  };
+};

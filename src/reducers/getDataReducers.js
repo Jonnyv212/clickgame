@@ -1,22 +1,37 @@
 import enemies from "../JSON/Enemies.json";
+import player from "../JSON/Player.json"
 
 const getDataReducers = (
     state = {
       enemyData: enemies,
-      currentEnemyData: []
+      currentEnemyData: {},
+      playerData: player,
+      health: 1
     },action
   ) => {
     switch (action.type) {
       case "ENEMY_DATA":
         state = {
           ...state,
-          displayComp: action.payload
+          enemyData: action.payload
         };
         break;
       case "CURRENT_ENEMY_DATA":
         state = {
           ...state,
-          displayComp: action.payload
+          currentEnemyData: action.payload
+        };
+        break;
+      case "PLAYER_DATA":
+        state = {
+          ...state,
+          playerData: action.payload
+        };
+        break;
+      case "UPDATE_ENEMY_HEALTH":
+        state = {
+          ...state,
+            health: state.currentEnemyData.monsterHealth
         };
         break;
     }

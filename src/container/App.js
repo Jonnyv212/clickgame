@@ -1,24 +1,27 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { connect } from "react-redux";
 import { DisplayEnemy } from "../components/DisplayEnemy";
+import {setEnemyData, setCurrentEnemyData} from "../actions/enemyActions.js"
+import {setPlayerData} from "../actions/playerActions.js"
 import "./App.css";
 
 
 
 // class App extends Component {
   const App = () => {
-  // const pData = useSelector(state => state.dataStates.playerData);
   const eData = useSelector(state => state.dataStates.enemyData);
-  const currentEnemy = useSelector(state => state.dataStates.enemyData);
+  const currentEnemy = useSelector(state => state.dataStates.currentEnemyData);
+  const pData = useSelector(state => state.dataStates.playerData);
+  const currentHealth = useSelector(state => state.dataStates.health)
+
 
   const dispatch = useDispatch();
 
+    useEffect(() => dispatch(setEnemyData), [])
+    useEffect(() => setNewEnemy(eData), [])
+    useEffect(() => setPlayerData(pData), [])
 
-  // componentDidMount() {
-  //   this.updatePlayerInfo();
-  //   this.enemySpawner();
-  // }
   // updatePlayerInfo = () => {
   //   //Map data from state and assign it to variable.
   //   let pInfo = this.state.playerData.map((player, index) => {
@@ -113,39 +116,45 @@ import "./App.css";
   //   }
   // };
 
-    const combatStart = (enemyID) =>{
-      let eHealth = eData[enemyID].monsterHealth;
+    const combatStart = (cEnemy) =>{
+      let eHealth = cEnemy.monsterHealth;
       let inCombat = true;
       if(inCombat == true){
         var interval =  setInterval(() => {
             if(eHealth > 0){
-              eHealth -= 3;
+              eHealth -= pData.playerDamage + 4;
               console.log("Enemy health: " + eHealth)
-            }else{
+            }else if (eHealth <= 0){
+              let rNum = Math.round(Math.random() * 10)
+              console.log(rNum)
               console.log("Enemy defeated!");
+              if(rNum <= 2){
+                console.log("Found a rare item!")
+              }
               inCombat = false;
               clearInterval(interval);
+              setNewEnemy(eData)
             }
           }, 1000);
     }
   }
 
-    const enemySpawner = data => {
-      combatStart(rNum)
-      console.log("Spawning a: " + data[rNum].monsterName)
-      return  <DisplayEnemy EnemyData={data[rNum]}/>
+    const enemySpawner = () => {
+      return  <DisplayEnemy EnemyData={currentEnemy}/>
     };
 
-    const setNewEnemy = () => {
-      let rNum = Math.round(Math.random() * (data.length - 1))
-      dispatch(setCurrentEnemyData(eData[rNum]))
-      enemySpawner(currentEnemy)
+    const setNewEnemy = (fullEnemyData) => {
+      let rNum = Math.round(Math.random() * (fullEnemyData.length - 1))
+      dispatch(setCurrentEnemyData(fullEnemyData[rNum]))
+
+      dispatch({type: "UPDATE_ENEMY_HEALTH"})
     }
+
     return (
       <div className="App">
         <div className="ClickUI">
-          <button onClick={() => enemySpawner(eData)}>FIGHT</button>
-          {/* {enemySpawner(eData)} */}
+          {enemySpawner()}
+          <button onClick={() => combatStart(currentEnemy)}>FIGHT</button>
         </div>
       </div>
     );
