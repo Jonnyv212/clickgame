@@ -3,20 +3,27 @@ import enemies from "../JSON/Enemies.json";
 const getDataReducers = (
     state = {
       enemyData: enemies,
-      currentEnemyData: []
+      currentEnemyData: [],
+      displayEnemyComponent: []
     },action
   ) => {
     switch (action.type) {
       case "ENEMY_DATA":
         state = {
           ...state,
-          displayComp: action.payload
+          enemyData: action.payload
         };
         break;
       case "CURRENT_ENEMY_DATA":
         state = {
           ...state,
-          displayComp: action.payload
+          currentEnemyData: action.payload
+        };
+        break;
+      case "DISPLAY_ENEMY_COMPONENT":
+        state = {
+          ...state,
+          displayEnemyComponent: action.payload
         };
         break;
     }

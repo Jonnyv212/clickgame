@@ -15,3 +15,12 @@ export const setCurrentEnemyData = data => {
     });
   };
 };
+
+export const setCurrentEnemyComponent = data => {
+  return dispatch => {
+    dispatch({
+      type: "DISPLAY_ENEMY_COMPONENT",
+      payload: data
+    });
+  };
+};

@@ -2,6 +2,7 @@ import React, { Component, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { connect } from "react-redux";
 import { DisplayEnemy } from "../components/DisplayEnemy";
+import {setCurrentEnemyData, setCurrentEnemyComponent} from "../actions/enemyActions"
 import "./App.css";
 
 
@@ -10,7 +11,9 @@ import "./App.css";
   const App = () => {
   // const pData = useSelector(state => state.dataStates.playerData);
   const eData = useSelector(state => state.dataStates.enemyData);
-  const currentEnemy = useSelector(state => state.dataStates.enemyData);
+  const currentEnemy = useSelector(state => state.dataStates.currentEnemyData);
+  const enemyComponent = useSelector(state => state.dataStates.displayEnemyComponent);
+
 
   const dispatch = useDispatch();
 
@@ -130,22 +133,22 @@ import "./App.css";
     }
   }
 
-    const enemySpawner = data => {
-      combatStart(rNum)
-      console.log("Spawning a: " + data[rNum].monsterName)
-      return  <DisplayEnemy EnemyData={data[rNum]}/>
-    };
+    // const enemySpawner = data => {
+    //   combatStart(rNum)
+    //   console.log("Spawning a: " + data[rNum].monsterName)
+    // };
 
     const setNewEnemy = () => {
-      let rNum = Math.round(Math.random() * (data.length - 1))
+      let rNum = Math.round(Math.random() * (eData.length - 1))
       dispatch(setCurrentEnemyData(eData[rNum]))
-      enemySpawner(currentEnemy)
+      dispatch(setCurrentEnemyComponent(<DisplayEnemy EnemyData={currentEnemy}/>))
+      // enemySpawner(currentEnemy)
     }
     return (
       <div className="App">
         <div className="ClickUI">
-          <button onClick={() => enemySpawner(eData)}>FIGHT</button>
-          {/* {enemySpawner(eData)} */}
+        {enemyComponent}
+          <button onClick={() => setNewEnemy()}>FIGHT</button>
         </div>
       </div>
     );
