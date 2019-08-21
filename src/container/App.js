@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { connect } from "react-redux";
 import { DisplayEnemy } from "../components/DisplayEnemy";
-import {setEnemyData, setCurrentEnemyData} from "../actions/enemyActions.js"
+import {setEnemyData, setCurrentEnemyData, setCurrentEnemyHealth} from "../actions/enemyActions.js"
 import {setPlayerData} from "../actions/playerActions.js"
 import "./App.css";
 
@@ -22,32 +22,6 @@ import "./App.css";
     useEffect(() => setNewEnemy(eData), [])
     useEffect(() => setPlayerData(pData), [])
 
-  // updatePlayerInfo = () => {
-  //   //Map data from state and assign it to variable.
-  //   let pInfo = this.state.playerData.map((player, index) => {
-  //     return player;
-  //   });
-
-  //   let pDamage = pInfo.map(player => {
-  //     return player.playerDamage;
-  //   });
-  //   let pLevel = pInfo.map(player => {
-  //     return player.playerLevel;
-  //   });
-  //   let cExp = pInfo.map(player => {
-  //     return player.playerExp;
-  //   });
-  //   let lExp = pInfo.map(player => {
-  //     return player.levelExp;
-  //   });
-
-  //   this.setState({
-  //     playerDamage: pDamage,
-  //     playerLevel: pLevel,
-  //     currentExp: cExp,
-  //     levelExp: lExp
-  //   });
-  // };
   // displayPlayerinfo = () => {
   //   let data = this.state.playerData.map((player, index) => {
   //     return (
@@ -116,13 +90,16 @@ import "./App.css";
   //   }
   // };
 
-    const combatStart = (cEnemy) =>{
-      let eHealth = cEnemy.monsterHealth;
+    const combatStart = () =>{
+      let eHealth = currentEnemy.monsterHealth;
       let inCombat = true;
+      dispatch(setCurrentEnemyHealth(eHealth))
+
       if(inCombat == true){
         var interval =  setInterval(() => {
             if(eHealth > 0){
               eHealth -= pData.playerDamage + 4;
+              dispatch(setCurrentEnemyHealth(eHealth))
               console.log("Enemy health: " + eHealth)
             }else if (eHealth <= 0){
               let rNum = Math.round(Math.random() * 10)
@@ -140,14 +117,14 @@ import "./App.css";
   }
 
     const enemySpawner = () => {
-      return  <DisplayEnemy EnemyData={currentEnemy}/>
+      return  <DisplayEnemy EnemyData={currentEnemy} EnemyHealth={currentHealth}/>
     };
 
     const setNewEnemy = (fullEnemyData) => {
       let rNum = Math.round(Math.random() * (fullEnemyData.length - 1))
       dispatch(setCurrentEnemyData(fullEnemyData[rNum]))
 
-      dispatch({type: "UPDATE_ENEMY_HEALTH"})
+      // dispatch({type: "UPDATE_ENEMY_HEALTH"})
     }
 
     return (

@@ -31,7 +31,7 @@ const getDataReducers = (
       case "UPDATE_ENEMY_HEALTH":
         state = {
           ...state,
-            health: state.currentEnemyData.monsterHealth
+            health: action.payload
         };
         break;
     }
