@@ -2,25 +2,26 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { connect } from "react-redux";
 import { DisplayEnemy } from "../components/DisplayEnemy";
-import {setEnemyData, setCurrentEnemyData, setCurrentEnemyHealth} from "../actions/enemyActions.js"
-import {setPlayerData} from "../actions/playerActions.js"
+import {
+  setEnemyData,
+  setCurrentEnemyData,
+  setCurrentEnemyHealth
+} from "../actions/enemyActions.js";
+import { setPlayerData } from "../actions/playerActions.js";
 import "./App.css";
 
-
-
 // class App extends Component {
-  const App = () => {
+const App = () => {
   const eData = useSelector(state => state.dataStates.enemyData);
   const currentEnemy = useSelector(state => state.dataStates.currentEnemyData);
   const pData = useSelector(state => state.dataStates.playerData);
-  const currentHealth = useSelector(state => state.dataStates.health)
-
+  const currentHealth = useSelector(state => state.dataStates.health);
 
   const dispatch = useDispatch();
 
-    useEffect(() => dispatch(setEnemyData), [])
-    useEffect(() => setNewEnemy(eData), [])
-    useEffect(() => setPlayerData(pData), [])
+  // useEffect(() => setEnemyData(), []);
+  useEffect(() => setNewEnemy(eData), []);
+  useEffect(() => setPlayerData(pData), []);
 
   // displayPlayerinfo = () => {
   //   let data = this.state.playerData.map((player, index) => {
@@ -34,14 +35,6 @@ import "./App.css";
   //   return data;
   // };
 
-  // enemySpawner = () => {
-  //   //Map data from state and assign it to variable.
-  //   let eInfo = this.state.enemyData.map((enemy, index) => {
-  //     return enemy;
-  //   });
-
-
-
   // playerAttack = () => {
   //   let pDamage = this.state.playerData.map((player, index) => {
   //     return player.playerDamage;
@@ -50,7 +43,6 @@ import "./App.css";
   //     enemyHealth: this.state.enemyHealth - pDamage
   //   });
   // };
-
 
   // killCounter = () => {
   //   let killNumber = this.state.playerData.map((player, index) => {
@@ -90,53 +82,65 @@ import "./App.css";
   //   }
   // };
 
-    const combatStart = () =>{
-      let eHealth = currentEnemy.monsterHealth;
-      let inCombat = true;
-      dispatch(setCurrentEnemyHealth(eHealth))
+  const setNewEnemy = fullEnemyData => {
+    let rNum = Math.round(Math.random() * (fullEnemyData.length - 1));
+    dispatch(setCurrentEnemyData(fullEnemyData[rNum]));
+    // dispatch(setCurrentEnemyHealth(currentEnemy.monsterHealth));
+    document.getElementById("fightBtn").disabled = false;
+  };
 
-      if(inCombat == true){
-        var interval =  setInterval(() => {
-            if(eHealth > 0){
-              eHealth -= pData.playerDamage + 4;
-              dispatch(setCurrentEnemyHealth(eHealth))
-              console.log("Enemy health: " + eHealth)
-            }else if (eHealth <= 0){
-              let rNum = Math.round(Math.random() * 10)
-              console.log(rNum)
-              console.log("Enemy defeated!");
-              if(rNum <= 2){
-                console.log("Found a rare item!")
-              }
-              inCombat = false;
-              clearInterval(interval);
-              setNewEnemy(eData)
-            }
-          }, 1000);
+  const lootCheck = () => {
+    let rNum = Math.round(Math.random() * 10);
+    if (rNum <= 2) {
+      console.log("Found a rare item!");
     }
-  }
+  };
 
-    const enemySpawner = () => {
-      return  <DisplayEnemy EnemyData={currentEnemy} EnemyHealth={currentHealth}/>
-    };
+  const playerAttack = () => {
+    let dmgVariance = Math.round(Math.random() * 3);
+    let missChance = Math.round(Math.random() * 100);
 
-    const setNewEnemy = (fullEnemyData) => {
-      let rNum = Math.round(Math.random() * (fullEnemyData.length - 1))
-      dispatch(setCurrentEnemyData(fullEnemyData[rNum]))
-
-      // dispatch({type: "UPDATE_ENEMY_HEALTH"})
+    if (missChance > 10) {
+      // console.log("Damage dealt: " + (pData.playerDamage + dmgVariance));
+      return pData.playerDamage + dmgVariance;
+    } else {
+      console.log("Missed!");
+      return 0;
     }
+  };
+  const combatStart = () => {
+    let eHealth = currentEnemy.monsterHealth;
+    document.getElementById("fightBtn").disabled = true;
+    var interval = setInterval(() => {
+      if (eHealth > 0) {
+        eHealth -= playerAttack();
+        dispatch(setCurrentEnemyHealth(eHealth));
+        // console.log("Enemy health: " + eHealth);
+      } else if (eHealth <= 0) {
+        console.log("Enemy defeated!");
+        lootCheck();
+        clearInterval(interval);
+        setNewEnemy(eData);
+      }
+    }, 1000);
+  };
 
+  const enemySpawner = () => {
     return (
-      <div className="App">
-        <div className="ClickUI">
-          {enemySpawner()}
-          <button onClick={() => combatStart(currentEnemy)}>FIGHT</button>
-        </div>
-      </div>
+      <DisplayEnemy EnemyData={currentEnemy} EnemyHealth={currentHealth} />
     );
-  // }
-}
+  };
+  return (
+    <div className="App">
+      <div className="ClickUI">
+        {enemySpawner()}
+        <button id="fightBtn" onClick={() => combatStart(currentEnemy)}>
+          FIGHT
+        </button>
+      </div>
+    </div>
+  );
+};
 export default connect(
   null,
   null

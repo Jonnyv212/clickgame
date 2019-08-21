@@ -13,12 +13,13 @@ export const setCurrentEnemyData = data => {
       type: "CURRENT_ENEMY_DATA",
       payload: data
     });
+    setCurrentEnemyHealth(data.monsterHealth);
   };
 };
 
-
 export const setCurrentEnemyHealth = data => {
   return dispatch => {
+    console.log("Test: " + data);
     dispatch({
       type: "UPDATE_ENEMY_HEALTH",
       payload: data
