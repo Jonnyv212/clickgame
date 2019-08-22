@@ -1,12 +1,10 @@
 import enemies from "../JSON/Enemies.json";
-import player from "../JSON/Player.json";
 
-const getDataReducers = (
+const enemyDataReducers = (
   state = {
     enemyData: enemies,
     currentEnemyData: {},
-    playerData: player,
-    health: 1
+    health: 1,
   },
   action
 ) => {
@@ -40,4 +38,4 @@ const getDataReducers = (
   return state;
 };
 
-export default getDataReducers;
+export default enemyDataReducers;

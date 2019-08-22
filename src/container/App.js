@@ -2,20 +2,19 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { connect } from "react-redux";
 import { DisplayEnemy } from "../components/DisplayEnemy";
-import {
-  setEnemyData,
-  setCurrentEnemyData,
-  setCurrentEnemyHealth
-} from "../actions/enemyActions.js";
-import { setPlayerData } from "../actions/playerActions.js";
+import {setEnemyData, setCurrentEnemyData, setCurrentEnemyHealth} from "../actions/enemyActions.js";
+import { setPlayerData, setPlayerLevel } from "../actions/playerActions.js";
 import "./App.css";
 
 // class App extends Component {
 const App = () => {
-  const eData = useSelector(state => state.dataStates.enemyData);
-  const currentEnemy = useSelector(state => state.dataStates.currentEnemyData);
-  const pData = useSelector(state => state.dataStates.playerData);
-  const currentHealth = useSelector(state => state.dataStates.health);
+  const eData = useSelector(state => state.enemyStates.enemyData);
+  const currentEnemy = useSelector(state => state.enemyStates.currentEnemyData);
+  const currentHealth = useSelector(state => state.enemyStates.health);
+
+  const pData = useSelector(state => state.playerStates.playerData);
+  const currentLevel = useSelector(state => state.playerStates.playerLevel);
+
 
   const dispatch = useDispatch();
 
@@ -35,14 +34,6 @@ const App = () => {
   //   return data;
   // };
 
-  // playerAttack = () => {
-  //   let pDamage = this.state.playerData.map((player, index) => {
-  //     return player.playerDamage;
-  //   });
-  //   this.setState({
-  //     enemyHealth: this.state.enemyHealth - pDamage
-  //   });
-  // };
 
   // killCounter = () => {
   //   let killNumber = this.state.playerData.map((player, index) => {
@@ -57,6 +48,20 @@ const App = () => {
   //   });
   // };
 
+ const gainExp = () => {
+    if (pData.playerExp >= pData.levelExp){
+      let expOver = 0;
+
+      if (pData.playerExp > pData.levelExp) {
+        expOver = pData.playerExp - pData.levelExp;
+      }
+    }
+  }
+
+const  gainLevel = (exp) => {
+   let level = currentLevel + exp
+    dispatch(setPlayerLevel(level));
+  }
   // gainExp = () => {
   //   if (this.state.playerExp >= this.state.levelExp) {
   //     let expOver = 0;
@@ -117,6 +122,7 @@ const App = () => {
         // console.log("current monster health: " + eHealth);
       } else if (eHealth <= 0) {
         console.log("Enemy defeated!");
+        gainLevel(1)
         lootCheck();
         clearInterval(interval);
         setNewEnemy(eData);

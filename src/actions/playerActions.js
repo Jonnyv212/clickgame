@@ -6,3 +6,12 @@ export const setPlayerData = data => {
       });
     };
   };
+
+  export const setPlayerLevel = data => {
+    return dispatch => {
+      dispatch({
+        type: "UPDATE_PLAYER_LEVEL",
+        payload: data
+      });
+    };
+  };
