@@ -1,5 +1,6 @@
 
     {
+        "playerHealth": 30,
         "playerDamage": 1,
         "playerLevel": 1,
         "playerExp": 0,

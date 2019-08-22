@@ -7,6 +7,16 @@ export const setPlayerData = data => {
     };
   };
 
+  export const setCurrentPlayerHealth = data => {
+    return dispatch => {
+      dispatch({
+        type: "UPDATE_PLAYER_HEALTH",
+        payload: data
+      });
+    };
+  };
+
+  
   export const setPlayerLevel = data => {
     return dispatch => {
       dispatch({

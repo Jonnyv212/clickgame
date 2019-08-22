@@ -15,14 +15,6 @@
   color: white;
 }
 
-.Image {
-  text-align: center;
-  /* border: groove; */
-  margin: auto;
-  width: 475px;
-  height: 400px;
-}
-
 .PlayerInfo {
   padding: 6px;
 }

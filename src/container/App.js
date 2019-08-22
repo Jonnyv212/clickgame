@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { connect } from "react-redux";
 import { DisplayEnemy } from "../components/DisplayEnemy";
+import { DisplayPlayer } from "../components/DisplayPlayer";
+
 import {setEnemyData, setCurrentEnemyData, setCurrentEnemyHealth} from "../actions/enemyActions.js";
 import { setPlayerData, setPlayerLevel, setPlayerCurrentExp } from "../actions/playerActions.js";
 import "./App.css";
@@ -10,9 +12,10 @@ import "./App.css";
 const App = () => {
   const eData = useSelector(state => state.enemyStates.enemyData);
   const currentEnemy = useSelector(state => state.enemyStates.currentEnemyData);
-  const currentHealth = useSelector(state => state.enemyStates.health);
+  const currentEnemyHealth = useSelector(state => state.enemyStates.health);
 
   const pData = useSelector(state => state.playerStates.playerData);
+  const currentPlayerHealth = useSelector(state => state.playerStates.playerHealth);
   const currentExp = useSelector(state => state.playerStates.playerExp);
   const reqExp = useSelector(state => state.playerStates.levelExp);
   const currentLevel = useSelector(state => state.playerStates.playerLevel);
@@ -51,21 +54,17 @@ const App = () => {
   // };
 
  const gainExp = (exp) => {
-    // if (currentExp >= reqExp){
-    //   let expOver = 0;
-
-    //   if (currentExp > reqExp) {
-    //     expOver = currentExp - reqExp;
-    //   }
-    // }
     console.log("Gained experience: " + exp)
+    //console.log(Math.floor(5/2))
     let sumExp = exp + currentExp
     dispatch(setPlayerCurrentExp(sumExp))
 
     if(sumExp >= reqExp){
+      let expOver = sumExp - reqExp
       gainLevel(1);
-      //Add exp left over 0.
-      dispatch(setPlayerCurrentExp(0))
+      dispatch(setPlayerCurrentExp(expOver))
+      //Set new max exp
+      //Set up over exp for multiple levels
     }
   }
 
@@ -73,30 +72,7 @@ const  gainLevel = (level) => {
    let sum = currentLevel + level
     dispatch(setPlayerLevel(sum));
   }
-  // gainExp = () => {
-  //   if (this.state.playerExp >= this.state.levelExp) {
-  //     let expOver = 0;
 
-  //     if (this.state.playerExp > this.state.levelExp) {
-  //       expOver = this.state.playerExp - this.state.levelExp;
-  //     }
-  //     this.setState(
-  //       {
-  //         playerLevel: this.state.playerLevel + 1,
-  //         playerExp: 0 + expOver,
-  //         levelExp: this.state.levelExp * (this.state.playerLevel + 1)
-  //       },
-  //       () => {
-  //         console.log(
-  //           "LEVEL UP! Now level: " +
-  //             this.state.playerLevel +
-  //             " " +
-  //             this.state.levelExp
-  //         );
-  //       }
-  //     );
-  //   }
-  // };
 
   const setNewEnemy = fullEnemyData => {
     let rNum = Math.round(Math.random() * (fullEnemyData.length - 1));
@@ -141,15 +117,24 @@ const  gainLevel = (level) => {
     }, 1000);
   };
 
-  const enemySpawner = () => {
+  const enemyDisplay = () => {
     return (
-      <DisplayEnemy EnemyData={currentEnemy} EnemyHealth={currentHealth} />
+      <DisplayEnemy EnemyData={currentEnemy} EnemyHealth={currentEnemyHealth} />
     );
   };
+
+  const playerDisplay = () => {
+    return (
+      <DisplayPlayer PlayerData={pData} PlayerHealth={currentPlayerHealth}/>
+    );
+  };
+
+
   return (
     <div className="App">
       <div className="ClickUI">
-        {enemySpawner()}
+        {enemyDisplay()}
+        {playerDisplay()}
         <button id="fightBtn" onClick={() => combatStart(currentEnemy)}>
           FIGHT
         </button>

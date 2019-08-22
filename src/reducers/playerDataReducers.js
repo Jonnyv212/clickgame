@@ -3,6 +3,7 @@ import player from "../JSON/Player.json";
 const playerDataReducers = (
   state = {
     playerData: player,
+    playerHealth: player.playerHealth,
     playerDamage: player.playerDamage,
     playerLevel: player.playerLevel,
     playerExp: player.playerExp,
@@ -12,11 +13,17 @@ const playerDataReducers = (
 ) => {
   switch (action.type) {
     case "PLAYER_DATA":
-        state = {
-            ...state,
-            playerData: action.payload
-        };
-        break;
+      state = {
+          ...state,
+          playerData: action.payload
+      };
+      break;
+    case "UPDATE_PLAYER_HEALTH":
+      state = {
+        ...state,
+        playerHealth: action.payload
+      };
+      break;
     case "UPDATE_PLAYER_LEVEL":
       state = {
         ...state,

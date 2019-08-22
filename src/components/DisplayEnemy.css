@@ -1,11 +1,23 @@
-.healthGreen {
-  width: 100%;
+.enemyHealthGreen {
+  /* width: 100%; */
   display: inline-block;
   background-color: green;
 }
 
-.healthRed {
-  width: 100%;
+.enemyHealthRed {
+  /* width: 100%; */
   display: inline-block;
   background-color: red;
+}
+
+.enemyComponent{
+  width: 100%;
+}
+
+.Image {
+  /* border: groove; */
+  /* margin: auto; */
+  /* width: 475px; */
+  /* height: 400px; */
+  width: 100%;
 }

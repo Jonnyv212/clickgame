@@ -15,18 +15,18 @@ export const DisplayEnemy = props => {
   // console.log("Enemy Current Health: " + props.EnemyHealth);
   // console.log("Enemy Health: " + props.EnemyData.monsterHealth);
   return (
-    <div>
-      <div className="healthBar">
-        <div className="healthGreen" style={{ width: hpPercent + "%" }}>
+    <div className="enemyComponent">
+      <div className="enemyHealthBar">
+        <div className="enemyHealthGreen" style={{ width: hpPercent + "%" }}>
           &nbsp;
         </div>
-        <div className="healthRed" style={{ width: hpRemoved + "%" }}>
+        <div className="enemyHealthRed" style={{ width: hpRemoved + "%" }}>
           &nbsp;
         </div>
       </div>
       <img className="Image" src={props.EnemyData.monsterImage} alt="slime" />
-      <div>Enemy Health: {props.EnemyHealth}</div>
-      <div>Enemy Level: {props.EnemyData.monsterLevel}</div>
+      {/* <div>Enemy Health: {props.EnemyHealth}</div> */}
+      {/* <div>Enemy Level: {props.EnemyData.monsterLevel}</div> */}
     </div>
   );
 };
