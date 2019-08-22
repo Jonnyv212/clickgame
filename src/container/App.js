@@ -19,7 +19,7 @@ const App = () => {
 
   const dispatch = useDispatch();
 
-  // useEffect(() => setEnemyData(), []);
+  useEffect(() => setEnemyData(), []);
   useEffect(() => setNewEnemy(eData), []);
   useEffect(() => setPlayerData(pData), []);
 
@@ -85,7 +85,6 @@ const App = () => {
   const setNewEnemy = fullEnemyData => {
     let rNum = Math.round(Math.random() * (fullEnemyData.length - 1));
     dispatch(setCurrentEnemyData(fullEnemyData[rNum]));
-    // dispatch(setCurrentEnemyHealth(currentEnemy.monsterHealth));
     document.getElementById("fightBtn").disabled = false;
   };
 
@@ -115,7 +114,7 @@ const App = () => {
       if (eHealth > 0) {
         eHealth -= playerAttack();
         dispatch(setCurrentEnemyHealth(eHealth));
-        // console.log("Enemy health: " + eHealth);
+        // console.log("current monster health: " + eHealth);
       } else if (eHealth <= 0) {
         console.log("Enemy defeated!");
         lootCheck();

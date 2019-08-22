@@ -20,7 +20,8 @@ const getDataReducers = (
     case "CURRENT_ENEMY_DATA":
       state = {
         ...state,
-        currentEnemyData: action.payload
+        currentEnemyData: action.payload,
+        health: action.payload.monsterHealth
       };
       break;
     case "PLAYER_DATA":

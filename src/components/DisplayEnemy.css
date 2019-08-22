@@ -1,4 +1,11 @@
 .healthGreen {
   width: 100%;
+  display: inline-block;
   background-color: green;
+}
+
+.healthRed {
+  width: 100%;
+  display: inline-block;
+  background-color: red;
 }
