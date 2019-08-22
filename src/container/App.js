@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { DisplayEnemy } from "../components/DisplayEnemy";
 import { DisplayPlayer } from "../components/DisplayPlayer";
 
-import {setEnemyData, setCurrentEnemyData, setCurrentEnemyHealth} from "../actions/enemyActions.js";
+import {setEnemyData, setCurrentEnemyData, setCurrentEnemyHealth, setCombat} from "../actions/enemyActions.js";
 import { setPlayerData, setPlayerLevel, setPlayerCurrentExp } from "../actions/playerActions.js";
 import "./App.css";
 
@@ -13,6 +13,8 @@ const App = () => {
   const eData = useSelector(state => state.enemyStates.enemyData);
   const currentEnemy = useSelector(state => state.enemyStates.currentEnemyData);
   const currentEnemyHealth = useSelector(state => state.enemyStates.health);
+  const combatEnabled = useSelector(state => state.enemyStates.combatEnabled);
+
 
   const pData = useSelector(state => state.playerStates.playerData);
   const currentPlayerHealth = useSelector(state => state.playerStates.playerHealth);
@@ -101,20 +103,41 @@ const  gainLevel = (level) => {
   };
   const combatStart = () => {
     let eHealth = currentEnemy.monsterHealth;
+    let pHealth = currentPlayerHealth;
+    dispatch(setCombat(true));
+
     document.getElementById("fightBtn").disabled = true;
-    var interval = setInterval(() => {
-      if (eHealth > 0) {
-        eHealth -= playerAttack();
-        dispatch(setCurrentEnemyHealth(eHealth));
-        // console.log("current monster health: " + eHealth);
-      } else if (eHealth <= 0) {
-        console.log("Enemy defeated!");
-        gainExp(currentEnemy.monsterExp)
-        lootCheck();
-        clearInterval(interval);
-        setNewEnemy(eData);
-      }
-    }, 1000);
+    if(combatEnabled == true){
+      var enemyInterval = setInterval(() => {
+        if (eHealth > 0) {
+          eHealth -= playerAttack();
+          dispatch(setCurrentEnemyHealth(eHealth));
+          // console.log("current monster health: " + eHealth);
+        } else if (eHealth <= 0) {
+          console.log("Enemy defeated!");
+          dispatch(setCombat(false))
+          gainExp(currentEnemy.monsterExp)
+          lootCheck();
+          clearInterval(enemyInterval);
+          setNewEnemy(eData);
+        }
+      }, 1300);
+
+      var playerInterval = setInterval(() => {
+        if (pHealth > 0) {
+          pHealth -= playerAttack();
+          dispatch(setCurrentEnemyHealth(pHealth));
+          // console.log("current monster health: " + eHealth);
+        } else if (pHealth <= 0) {
+          console.log("Enemy defeated!");
+          dispatch(setCombat(false))
+          // gainExp(currentEnemy.monsterExp)
+          // lootCheck();
+          clearInterval(playerInterval);
+          // setNewEnemy(eData);
+        }
+      }, 1300);
+    }
   };
 
   const enemyDisplay = () => {
