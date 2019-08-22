@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { connect } from "react-redux";
 import { DisplayEnemy } from "../components/DisplayEnemy";
 import {setEnemyData, setCurrentEnemyData, setCurrentEnemyHealth} from "../actions/enemyActions.js";
-import { setPlayerData, setPlayerLevel } from "../actions/playerActions.js";
+import { setPlayerData, setPlayerLevel, setPlayerCurrentExp } from "../actions/playerActions.js";
 import "./App.css";
 
 // class App extends Component {
@@ -13,6 +13,8 @@ const App = () => {
   const currentHealth = useSelector(state => state.enemyStates.health);
 
   const pData = useSelector(state => state.playerStates.playerData);
+  const currentExp = useSelector(state => state.playerStates.playerExp);
+  const reqExp = useSelector(state => state.playerStates.levelExp);
   const currentLevel = useSelector(state => state.playerStates.playerLevel);
 
 
@@ -48,19 +50,28 @@ const App = () => {
   //   });
   // };
 
- const gainExp = () => {
-    if (pData.playerExp >= pData.levelExp){
-      let expOver = 0;
+ const gainExp = (exp) => {
+    // if (currentExp >= reqExp){
+    //   let expOver = 0;
 
-      if (pData.playerExp > pData.levelExp) {
-        expOver = pData.playerExp - pData.levelExp;
-      }
+    //   if (currentExp > reqExp) {
+    //     expOver = currentExp - reqExp;
+    //   }
+    // }
+    console.log("Gained experience: " + exp)
+    let sumExp = exp + currentExp
+    dispatch(setPlayerCurrentExp(sumExp))
+
+    if(sumExp >= reqExp){
+      gainLevel(1);
+      //Add exp left over 0.
+      dispatch(setPlayerCurrentExp(0))
     }
   }
 
-const  gainLevel = (exp) => {
-   let level = currentLevel + exp
-    dispatch(setPlayerLevel(level));
+const  gainLevel = (level) => {
+   let sum = currentLevel + level
+    dispatch(setPlayerLevel(sum));
   }
   // gainExp = () => {
   //   if (this.state.playerExp >= this.state.levelExp) {
@@ -122,7 +133,7 @@ const  gainLevel = (exp) => {
         // console.log("current monster health: " + eHealth);
       } else if (eHealth <= 0) {
         console.log("Enemy defeated!");
-        gainLevel(1)
+        gainExp(currentEnemy.monsterExp)
         lootCheck();
         clearInterval(interval);
         setNewEnemy(eData);
@@ -142,6 +153,7 @@ const  gainLevel = (exp) => {
         <button id="fightBtn" onClick={() => combatStart(currentEnemy)}>
           FIGHT
         </button>
+
       </div>
     </div>
   );

@@ -15,3 +15,20 @@ export const setPlayerData = data => {
       });
     };
   };
+
+  export const setPlayerMaxExp = data => {
+    return dispatch => {
+      dispatch({
+        type: "UPDATE_PLAYER_MAX_EXP",
+        payload: data
+      });
+    };
+  };
+  export const setPlayerCurrentExp = data => {
+    return dispatch => {
+      dispatch({
+        type: "UPDATE_PLAYER_CURRENT_EXP",
+        payload: data
+      });
+    };
+  };

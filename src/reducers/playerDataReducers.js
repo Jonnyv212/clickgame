@@ -11,19 +11,30 @@ const playerDataReducers = (
   action
 ) => {
   switch (action.type) {
-    case "UPDATE_PLAYER_EXP":
-      state = {
-        ...state,
-        playerData: action.payload.playerExp,
-        playerData: action.payload.playerLevel
-      };
-      break;
+    case "PLAYER_DATA":
+        state = {
+            ...state,
+            playerData: action.payload
+        };
+        break;
     case "UPDATE_PLAYER_LEVEL":
       state = {
         ...state,
         playerLevel: action.payload
       };
       break;
+    case "UPDATE_PLAYER_MAX_EXP":
+    state = {
+        ...state,
+        levelExp: action.payload,
+    };
+    break;
+    case "UPDATE_PLAYER_CURRENT_EXP":
+        state = {
+        ...state,
+        playerExp: action.payload,
+    };
+    break;
   }
   return state;
 };

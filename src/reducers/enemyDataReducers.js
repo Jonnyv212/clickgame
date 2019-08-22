@@ -22,12 +22,6 @@ const enemyDataReducers = (
         health: action.payload.monsterHealth
       };
       break;
-    case "PLAYER_DATA":
-      state = {
-        ...state,
-        playerData: action.payload
-      };
-      break;
     case "UPDATE_ENEMY_HEALTH":
       state = {
         ...state,
