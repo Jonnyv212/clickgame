@@ -11,4 +11,7 @@ const allReducers = combineReducers({
   playerStates: playerDataReducers
 });
 
-export default createStore(allReducers, composeEnhancer(applyMiddleware(thunk)));
+export default createStore(
+  allReducers,
+  composeEnhancer(applyMiddleware(thunk))
+);
