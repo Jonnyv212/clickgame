@@ -4,7 +4,6 @@ const enemyDataReducers = (
   state = {
     enemyData: enemies,
     currentEnemyData: {},
-    health: 1,
     combatEnabled: false
   },
   action
@@ -25,14 +24,16 @@ const enemyDataReducers = (
     case "CURRENT_ENEMY_DATA":
       state = {
         ...state,
-        currentEnemyData: action.payload,
-        health: action.payload.monsterHealth
+        currentEnemyData: action.payload
       };
       break;
     case "UPDATE_ENEMY_HEALTH":
       state = {
         ...state,
-        health: action.payload
+        currentEnemyData: {
+          ...state.currentEnemyData,
+          monsterHealth: action.payload
+        }
       };
       break;
   }

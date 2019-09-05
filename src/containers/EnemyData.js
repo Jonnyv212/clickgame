@@ -1,40 +1,57 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setCurrentEnemyData } from "../actions/enemyActions";
-import { Combat } from "./Combat";
+import {
+  setCurrentEnemyData,
+  setCurrentEnemyHealth
+} from "../actions/enemyActions";
 import { DisplayEnemy } from "../components/DisplayEnemy";
 
 export const EnemyData = () => {
   const fullEnemyData = useSelector(state => state.enemyStates.enemyData);
   const currentEnemy = useSelector(state => state.enemyStates.currentEnemyData);
-  const currentEnemyHealth = useSelector(state => state.enemyStates.health);
   const dispatch = useDispatch();
+  const [maxHP, setMaxHP] = useState();
 
-  // var hpPercent = 0;
-  // var hpRemoved = 0;
-
-  // if (currentEnemyHealth <= 0) {
-  //   // hpPercent = 1;
-  // } else {
-  //   hpPercent = (currentEnemyHealth / currentEnemy.monsterHealth) * 100;
-  //   hpRemoved = 100 - hpPercent;
-  //   console.log("Percentage: " + hpPercent + "%");
-  // }
+  useEffect(() => {
+    setNewEnemy(fullEnemyData);
+  }, []);
 
   const setNewEnemy = fullEnemyData => {
     let rNum = Math.round(Math.random() * (fullEnemyData.length - 1));
     dispatch(setCurrentEnemyData(fullEnemyData[rNum]));
+    setEnemyHealth(fullEnemyData[rNum].monsterHealth);
+    setMaxHP(fullEnemyData[rNum].monsterHealth);
+    console.log(rNum);
+  };
 
-    Combat(currentEnemy);
-    // document.getElementById("fightBtn").disabled = false;
+  const setEnemyHealth = enemyHealth => {
+    dispatch(setCurrentEnemyHealth(enemyHealth));
+  };
+
+  const Combat = enemyData => {
+    let eHealth = enemyData.monsterHealth;
+
+    var enemyInterval = setInterval(() => {
+      if (eHealth > 0) {
+        eHealth -= 5;
+        setEnemyHealth(eHealth);
+
+        console.log("current monster health: " + eHealth);
+      } else if (eHealth <= 0) {
+        setNewEnemy(fullEnemyData);
+        console.log("Enemy defeated!");
+        clearInterval(enemyInterval);
+      }
+    }, 1300);
   };
 
   return (
     <div>
-      <DisplayEnemy EnemyData={currentEnemy} />
-      <button id="fightBtn" onClick={() => setNewEnemy(fullEnemyData)}>
-        FIGHT
-      </button>
+      <DisplayEnemy
+        NewEnemy={() => Combat(currentEnemy)}
+        currentEnemyData={currentEnemy}
+        enemyMaxHealth={maxHP}
+      />
     </div>
   );
 };

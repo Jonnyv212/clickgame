@@ -19,24 +19,24 @@ import "./App.css";
 
 // class App extends Component {
 const App = () => {
-  const eData = useSelector(state => state.enemyStates.enemyData);
-  const currentEnemy = useSelector(state => state.enemyStates.currentEnemyData);
-  const currentEnemyHealth = useSelector(state => state.enemyStates.health);
-  const combatEnabled = useSelector(state => state.enemyStates.combatEnabled);
+  // const eData = useSelector(state => state.enemyStates.enemyData);
+  // const currentEnemy = useSelector(state => state.enemyStates.currentEnemyData);
+  // const currentEnemyHealth = useSelector(state => state.enemyStates.health);
+  // const combatEnabled = useSelector(state => state.enemyStates.combatEnabled);
 
-  const pData = useSelector(state => state.playerStates.playerData);
-  const currentPlayerHealth = useSelector(
-    state => state.playerStates.playerHealth
-  );
-  const currentExp = useSelector(state => state.playerStates.playerExp);
-  const reqExp = useSelector(state => state.playerStates.levelExp);
-  const currentLevel = useSelector(state => state.playerStates.playerLevel);
+  // const pData = useSelector(state => state.playerStates.playerData);
+  // const currentPlayerHealth = useSelector(
+  //   state => state.playerStates.playerHealth
+  // );
+  // const currentExp = useSelector(state => state.playerStates.playerExp);
+  // const reqExp = useSelector(state => state.playerStates.levelExp);
+  // const currentLevel = useSelector(state => state.playerStates.playerLevel);
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  useEffect(() => setEnemyData(), []);
-  useEffect(() => setNewEnemy(eData), []);
-  useEffect(() => setPlayerData(pData), []);
+  // useEffect(() => setEnemyData(), []);
+  // useEffect(() => setNewEnemy(eData), []);
+  // useEffect(() => setPlayerData(pData), []);
 
   // displayPlayerinfo = () => {
   //   let data = this.state.playerData.map((player, index) => {
@@ -83,11 +83,11 @@ const App = () => {
   //   dispatch(setPlayerLevel(sum));
   // };
 
-  const setNewEnemy = fullEnemyData => {
-    let rNum = Math.round(Math.random() * (fullEnemyData.length - 1));
-    dispatch(setCurrentEnemyData(fullEnemyData[rNum]));
-    // document.getElementById("fightBtn").disabled = false;
-  };
+  // const setNewEnemy = fullEnemyData => {
+  //   let rNum = Math.round(Math.random() * (fullEnemyData.length - 1));
+  //   dispatch(setCurrentEnemyData(fullEnemyData[rNum]));
+  //   // document.getElementById("fightBtn").disabled = false;
+  // };
 
   // const lootCheck = () => {
   //   let rNum = Math.round(Math.random() * 10);
