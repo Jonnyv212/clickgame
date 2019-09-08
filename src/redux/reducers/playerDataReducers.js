@@ -1,4 +1,4 @@
-import player from "../JSON/Player.json";
+import player from "../../JSON/Player.json";
 
 const playerDataReducers = (
   state = {
@@ -14,14 +14,17 @@ const playerDataReducers = (
   switch (action.type) {
     case "PLAYER_DATA":
       state = {
-          ...state,
-          playerData: action.payload
+        ...state,
+        playerData: action.payload
       };
       break;
     case "UPDATE_PLAYER_HEALTH":
       state = {
         ...state,
-        playerHealth: action.payload
+        playerData: {
+          ...state.playerData,
+          playerHealth: action.payload
+        }
       };
       break;
     case "UPDATE_PLAYER_LEVEL":
@@ -31,17 +34,17 @@ const playerDataReducers = (
       };
       break;
     case "UPDATE_PLAYER_MAX_EXP":
-    state = {
+      state = {
         ...state,
-        levelExp: action.payload,
-    };
-    break;
+        levelExp: action.payload
+      };
+      break;
     case "UPDATE_PLAYER_CURRENT_EXP":
-        state = {
+      state = {
         ...state,
-        playerExp: action.payload,
-    };
-    break;
+        playerExp: action.payload
+      };
+      break;
   }
   return state;
 };

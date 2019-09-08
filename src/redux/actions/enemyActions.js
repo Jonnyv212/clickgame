@@ -7,15 +7,6 @@ export const setEnemyData = data => {
   };
 };
 
-export const setCombat = data => {
-  return dispatch => {
-    dispatch({
-      type: "SET_COMBAT",
-      payload: data
-    });
-  };
-};
-
 export const setCurrentEnemyData = data => {
   return dispatch => {
     dispatch({

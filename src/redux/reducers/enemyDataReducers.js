@@ -1,10 +1,9 @@
-import enemies from "../JSON/Enemies.json";
+import enemies from "../../JSON/Enemies.json";
 
 const enemyDataReducers = (
   state = {
     enemyData: enemies,
-    currentEnemyData: {},
-    combatEnabled: false
+    currentEnemyData: {}
   },
   action
 ) => {
@@ -13,12 +12,6 @@ const enemyDataReducers = (
       state = {
         ...state,
         enemyData: action.payload
-      };
-      break;
-    case "SET_COMBAT":
-      state = {
-        ...state,
-        combatEnabled: action.payload
       };
       break;
     case "CURRENT_ENEMY_DATA":

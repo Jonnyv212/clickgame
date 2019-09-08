@@ -1,20 +1,20 @@
 import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+// import { useSelector, useDispatch } from "react-redux";
 import { connect } from "react-redux";
-import { EnemyData } from "./containers/EnemyData";
-import { DisplayPlayer } from "./components/DisplayPlayer";
+import EnemyData from "./features/Enemy/EnemyData";
+// import { DisplayPlayer } from "./components/DisplayPlayer";
 
-import {
-  setEnemyData,
-  setCurrentEnemyData,
-  setCurrentEnemyHealth,
-  setCombat
-} from "./actions/enemyActions.js";
-import {
-  setPlayerData,
-  setPlayerLevel,
-  setPlayerCurrentExp
-} from "./actions/playerActions.js";
+// import {
+//   setEnemyData,
+//   setCurrentEnemyData,
+//   setCurrentEnemyHealth,
+//   setCombat
+// } from "./actions/enemyActions.js";
+// import {
+//   setPlayerData,
+//   setPlayerLevel,
+//   setPlayerCurrentExp
+// } from "./actions/playerActions.js";
 import "./App.css";
 
 // class App extends Component {
