@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
-  setEnemyData,
   setCurrentEnemyData,
   setCurrentEnemyHealth
 } from "../../redux/actions/enemyActions";
 import { setCombat } from "../../redux/actions/combatActions";
-import { setCurrentPlayerHealth } from "../../redux/actions/playerActions";
+// import { setCurrentPlayerHealth } from "../../redux/actions/playerActions";
 import { DisplayEnemy } from "./DisplayEnemy";
 import { connect } from "react-redux";
+import {compose, withState, lifecycle} from "recompose"
 
-const EnemyData = ({
-  theCombat,
-  setCombat,
+
+ const EnemyData = ({
+  combatReady,
+  setTheCombat,
   fullEnemyData,
   setFullEnemyData,
   currentEnemyData,
   setCurrentEnemyData,
   setCurrentEnemyHealth,
-  currentEnemyHealth,
-  ownProps
+  currentEnemyHealth
 }) => {
   // const fullEnemyData = useSelector(state => state.enemyStates.enemyData);
   // const currentEnemy = useSelector(state => state.enemyStates.currentEnemyData);
@@ -31,12 +31,10 @@ const EnemyData = ({
 
   const setNewEnemy = fullEnemyData => {
     let rNum = Math.round(Math.random() * (fullEnemyData.length - 1));
-    setCurrentEnemyData(fullEnemyData[rNum]);
-    // setCurrentEnemyHealth(fullEnemyData[rNum].monsterHealth);
-    // setMaxHP(fullEnemyData[rNum].monsterHealth);
+    setCurrentEnemyData(fullEnemyData);
     console.log("Spawning: " + fullEnemyData[rNum].monsterName);
   };
-  useEffect(() => setNewEnemy(fullEnemyData), []);
+
 
   // const updateEnemyHealth = fullEnemyData => {
   //   // if (combatOff == true) return dispatch(setCurrentEnemyHealth(eHealth));
@@ -70,83 +68,31 @@ const EnemyData = ({
   //   }, 1300);
   // };
 
-  const test = () => {
-    setCombat(true);
+  const beginCombat = () => {
     let enemyHP = currentEnemyHealth;
-
-    if (theCombat == true) {
-      const combatInterval = setInterval(() => {
-        if (enemyHP > 0) {
-          console.log(enemyHP);
-          enemyHP = enemyHP - 5;
-          setCurrentEnemyHealth(enemyHP);
-        } else if (enemyHP <= 0) {
-          setCombat(false);
-          setNewEnemy(fullEnemyData);
-          console.log(enemyHP);
-          console.log("Combat over");
-          clearInterval(combatInterval);
-        }
-      }, 1500);
-    } else if (theCombat == false) {
-      console.log("Combat over");
-    }
+    
+    const combatInterval = setInterval(() => {
+      if (enemyHP > 0) {
+        console.log(enemyHP);
+        enemyHP = enemyHP - 5;
+        setCurrentEnemyHealth(enemyHP);
+      } else if (enemyHP <= 0) {
+        setNewEnemy(fullEnemyData)
+        clearInterval(combatInterval);
+      }
+    }, 1000);
   };
-
-  // const dispatchingThingy = () => {
-  //   setTheCombat(true);
-  //   Combat();
-  // };
-  // const Combat = () => {
-  //   // let eHealth = enemyData.monsterHealth;/
-  //   // let pHealth = fullPlayerData.playerHealth;
-
-  //   // setTheCombat(true);
-  //   var enemyInterval = setInterval(() => {
-  //     console.log(theCombat);
-  //     if (theCombat == true) {
-  //       // console.log(theCombat);
-  //       updateEnemyHealth();
-  //     } else if (theCombat == false) {
-  //       console.log("We got here");
-  //       clearInterval(enemyInterval);
-  //       // setNewEnemy(fullEnemyData);
-  //     }
-  //   }, 1300);
-
-  //   // var playerInterval = setInterval(() => {
-  //   //   if (combatOff == false) {
-  //   //     if (pHealth > 0) {
-  //   //       pHealth -= 3;
-  //   //       dispatch(setCurrentPlayerHealth(pHealth));
-  //   //       console.log("current player health: " + pHealth);
-  //   //     } else if (pHealth <= 0) {
-  //   //       console.log("Player defeated!");
-  //   //       // gainExp(currentEnemy.monsterExp)
-  //   //       // lootCheck();
-  //   //       setCombatOff(true);
-  //   //       console.log("CombatOff: " + combatOff);
-  //   //       clearInterval(playerInterval);
-  //   //       // setNewEnemy(eData);
-  //   //     }
-  //   //   } else {
-  //   //     clearInterval(playerInterval);
-  //   //     console.log("CombatOff: " + combatOff);
-  //   //   }
-  //   // }, 1300);
-  // };
 
   return (
     <DisplayEnemy
-      NewEnemy={() => test()}
+      NewEnemy={beginCombat}
       currentEnemyData={currentEnemyData}
       enemyMaxHealth={currentEnemyData.monsterHealth}
     />
   );
 };
 
-const mapStateToProps = (state, ownProps) => ({
-  theCombat: state.combatStates.combat,
+const mapStateToProps = (state) => ({
   fullEnemyData: state.enemyStates.enemyData,
   currentEnemyData: state.enemyStates.currentEnemyData,
   currentEnemyHealth: state.enemyStates.currentEnemyData.monsterHealth
@@ -154,14 +100,20 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    setCombat: event => dispatch(setCombat(event)),
-    setFullEnemyData: () => dispatch(setEnemyData()),
     setCurrentEnemyData: event => dispatch(setCurrentEnemyData(event)),
     setCurrentEnemyHealth: event => dispatch(setCurrentEnemyHealth(event))
   };
 };
 
-export default connect(
+export default compose(
+  connect(
   mapStateToProps,
   mapDispatchToProps
+), 
+lifecycle({
+  componentDidMount(){
+     this.props.setCurrentEnemyData(this.props.fullEnemyData)
+  }
+}),
+withState('combatReady', 'setCombatReady', true)
 )(EnemyData);
